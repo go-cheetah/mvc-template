@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func HealthHandler() func(c *gin.Context) {
+func HealthHandler() gin.HandlerFunc {
 
 	return func(c *gin.Context) {
 		service := Health{}

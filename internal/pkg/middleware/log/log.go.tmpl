@@ -28,7 +28,7 @@ func NewClient(infoFilePath, errorFilePath, level string,
 		maxBackups,
 		maxAge)
 	// error单独使用一个日志文件，平时好排查
-	writeSyncer2 := getLogWriter(infoFilePath,
+	writeSyncer2 := getLogWriter(errorFilePath,
 		maxSize,
 		maxBackups,
 		maxAge)

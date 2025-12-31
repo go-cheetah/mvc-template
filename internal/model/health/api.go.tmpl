@@ -1,0 +1,10 @@
+package health
+
+type Client interface {
+}
+
+func New(db *gorm.DB) Client {
+	return &HealthClient{
+		DB: db,
+	}
+}

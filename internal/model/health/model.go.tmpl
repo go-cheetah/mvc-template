@@ -5,12 +5,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type Client struct {
+type HealthClient struct {
 	DB *gorm.DB
 }
 
-func New(db *gorm.DB) *Client {
-	return &Client{
-		DB: db,
-	}
-}

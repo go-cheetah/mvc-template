@@ -14,6 +14,7 @@ type SQLiteDB struct {
 
 func (db *SQLiteDB) Connect(connectionString string) error {
 	var err error
+	dir := filepath.Dir(connectionString)
 	if dir != "." {
 		if err := os.MkdirAll(dir, 0755); err != nil {
 			return err

@@ -32,6 +32,7 @@ func New(dbType, connectionString string, opts ...Option) DB {
 
 	err := database.Connect(connectionString)
 	if err != nil {
+		
 		return nil //, err
 	}
 

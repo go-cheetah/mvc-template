@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"{{ .Title }}/internal/handler/health"
+	healthRes "{{ .Title }}/internal/handler/health/res"
 )
 
 // SetupRouter 初始化gin入口，路由信息
@@ -14,5 +15,6 @@ func (s *Server) SetupRouter() {
 }
 
 func healthRouter(group *gin.RouterGroup) {
+	healthRes.RegisterCode()
 	group.GET("/health", health.HealthHandler())
 }

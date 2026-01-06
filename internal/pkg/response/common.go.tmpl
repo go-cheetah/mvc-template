@@ -1,8 +1,12 @@
 package response
 
-// 小写，局部变量，不被外部引用。
-// 通过这样的初始化内容进行返回
-var codeMsgMap map[int]string
+import "sync"
+
+var (
+	codeMsgMap map[int]string
+	once       sync.Once
+	mu         sync.RWMutex // 用于并发安全（可选，但推荐）
+)
 
 // 错误码
 const (

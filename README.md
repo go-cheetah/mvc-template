@@ -3,6 +3,8 @@
 项目启动
 
 ```bash
+go install github.com/swaggo/swag/cmd/swag@latest
+swag init -g cmd/app/main.go
 go run cmd/app/main.go
 ```
 

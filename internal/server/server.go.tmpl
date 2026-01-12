@@ -12,6 +12,20 @@ import (
 	"{{ .Title }}/pkg/log"
 )
 
+// @title Squirrel Dev API
+// @version 1.0
+// @description Squirrel Dev API Server Documentation
+// @termsOfService http://swagger.io/terms/
+
+// @contact.name API Support
+// @contact.url http://www.swagger.io/support
+// @contact.email support@swagger.io
+
+// @license.name Apache 2.0
+// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
+
+// @host localhost:9000
+// @BasePath /api/v1
 type Server struct {
 	Config *config.Config
 	Gin    *gin.Engine

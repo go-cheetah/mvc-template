@@ -3,6 +3,8 @@
 项目启动
 
 ```bash
+go install github.com/swaggo/swag/cmd/swag@latest
+swag init -g cmd/app/main.go
 go run cmd/app/main.go
 ```
 
@@ -39,24 +41,16 @@ go run cmd/app/main.go
 │   │       └── service.go
 │   ├── model                        # model层，增加处理数据库的内容
 │   │   ├── health                   # 案例
+│   │   │   ├── api.go               # 接口编程
 │   │   │   ├── health.go            # 具体的操作内容，一个表结构对应一个文件
-│   │   │   ├── model.go             # 初始化的操作
+│   │   │   ├── migrate.go           # 初始化的操作
+│   │   │   ├── model.go             # model层
 │   │   │   └── types.go             # 定义常量等内容
+│   │   ├── migration                # migrate内容
+│   │   │   ├── migration.go         # migrate的初始化操作
+│   │   │   └── model.go             # model层
 │   │   └── model.go                 # 这里可以定义接口，这里暂时是一个空文件
 │   ├── pkg                          # 内部调用模块，其实不推荐加一个pkg，因为这样导入模块的时候 需要中间多加一个pkg字样，看个人习惯
-│   │   ├── database                 # 数据库相关，例如MySQL
-│   │   │   ├── database.go          # 定义接口
-│   │   │   ├── mysql.go             # 初始化MySQL
-│   │   │   └── sqlite.go            # 初始化sqlite
-│   │   ├── generator                # id生成器
-│   │   │   └── id.go
-│   │   ├── middleware               # 中间件，上面其实也算，这里应该算是gin的使用工具
-│   │   │   ├── cors                 # 跨域
-│   │   │   │   ├── config.go
-│   │   │   │   ├── cors.go
-│   │   │   │   └── utils.go
-│   │   │   └── log                  # 日志
-│   │   │       └── log.go
 │   │   └── response                 # 返回内容
 │   │       ├── common.go
 │   │       └── response.go
@@ -65,6 +59,18 @@ go run cmd/app/main.go
 │       ├── router.go                # 路由在这里，通过传参的方式把配置文件等服务传到handler进行使用
 │       └── server.go                # web框架入口            
 ├── pkg                              # 跟上面的pkg一样的说法，不推荐，但是很多代码库有这个习惯，看个人使用，这里是可以其他代码库进行调用
+│   ├── cors                         # 跨域
+│   │   ├── config.go
+│   │   ├── cors.go
+│   │   └── utils.go
+│   ├── database                     # 数据库相关，例如MySQL
+│   │   ├── database.go              # 定义接口
+│   │   ├── mysql.go                 # 初始化MySQL
+│   │   └── sqlite.go                # 初始化sqlite
+│   ├── generator                    # id生成器
+│   │   └── id.go
+│   └── log                          # 日志
+│   │    └── log.go
 │   └── pkg.go                       # 查看 https://github.com/golang-standards/project-layout/issues/10 只看讨论即可
 └── README.md                        # readme内容
 ```

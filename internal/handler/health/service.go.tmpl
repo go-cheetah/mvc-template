@@ -10,7 +10,7 @@ import (
 type Health struct{
 	Config *config.Config
 	DB     database.DB
-	HealthModelClient healthModel.Client
+	HealthModelClient healthModel.Repository
 }
 
 func (h *Health) Status() response.Response {

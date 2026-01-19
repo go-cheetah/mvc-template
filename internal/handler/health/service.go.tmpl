@@ -4,13 +4,13 @@ import (
 	"{{ .Title }}/pkg/database"
 	"{{ .Title }}/internal/config"
 	"{{ .Title }}/internal/pkg/response"
-	healthModel "{{ .Title }}/internal/model/health"
+	healthRepository "{{ .Title }}/internal/repository/health"
 )
 
 type Health struct{
-	Config *config.Config
-	DB     database.DB
-	HealthModelClient healthModel.Repository
+	Config 	   *config.Config
+	DB     	   database.DB
+	Repository healthRepository.Repository
 }
 
 func (h *Health) Status() response.Response {

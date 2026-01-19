@@ -1,0 +1,29 @@
+// The model is written using APIs to facilitate the creation of mock data during service testing.
+package health
+
+import "gorm.io/gorm"
+
+type Repository interface {
+}
+
+type RepoClient struct {
+	DB   *gorm.DB
+	Mock MockClient
+}
+
+func NewRepoClient(t string, db any) *RepoClient {
+	if t == "mock" {
+		return &RepoClient{
+			Mock: MockClient{},
+		}
+	} else {
+		return &RepoClient{
+			DB: db.(*gorm.DB),
+		}
+	}
+}
+func New(rc *RepoClient) Repository {
+	return &Client{
+		DB: rc.DB,
+	}
+}

@@ -6,8 +6,25 @@ import "gorm.io/gorm"
 type Repository interface {
 }
 
-func New(db *gorm.DB) Repository {
+type RepoClient struct {
+	DB   *gorm.DB
+	Mock MockClient
+}
+
+func NewRepoClient(t string, db any) *RepoClient {
+	if t == "mock" {
+		return &RepoClient{
+			Mock: MockClient{},
+		}
+	} else {
+		return &RepoClient{
+			DB: db.(*gorm.DB),
+		}
+	}
+}
+
+func New(rc *RepoClient) Repository {
 	return &Client{
-		DB: db,
+		DB: rc.DB,
 	}
 }

@@ -34,6 +34,9 @@ func run(o *options.AppOptions) (err error) {
 	// 初始化返回值
 	response.Init()
 	server, err := o.NewServer()
+	if err != nil {
+		return err
+	}
 	server.Run()
 	return
 }

@@ -34,18 +34,23 @@ func (o *AppOptions) NewServer() (*server.Server, error) {
 		o.Config.Log.MaxSize, o.Config.Log.MaxBackups, o.Config.Log.MaxAge,
 	)
 
+	var connStr string
 	if o.Config.DB.Type == "sqlite" {
-		s.DB = database.New(o.Config.DB.Type, o.Config.DB.Sqlite.FilePath, database.WithMigrate(true))
-		return s, nil
+		connStr = o.Config.DB.Sqlite.FilePath
 	} else {
-		Connect := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
+		connStr = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
 			o.Config.DB.Mysql.Username,
 			o.Config.DB.Mysql.Password,
 			o.Config.DB.Mysql.Host,
 			o.Config.DB.Mysql.Port,
 			o.Config.DB.Mysql.DbName)
-		s.DB = database.New(o.Config.DB.Type, Connect, database.WithMigrate(true))
 	}
+
+	db, err := database.New(o.Config.DB.Type, connStr, database.WithMigrate(true))
+	if err != nil {
+		return nil, err
+	}
+	s.DB = db
 	
 	return s, nil
 }

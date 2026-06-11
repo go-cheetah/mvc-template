@@ -35,6 +35,14 @@ func Init(db *gorm.DB) {
 	// 可以在这里添加初始迁移记录
 }
 
+func recordMigrationTx(tx *gorm.DB, version string) error {
+	migration := Migration{
+		Version:   version,
+		AppliedAt: time.Now(),
+	}
+	return tx.Create(&migration).Error
+}
+
 // RecordMigration 记录已应用的迁移版本
 func (c *Client) RecordMigration(version string) error {
 	has, err := c.HasMigration(version)

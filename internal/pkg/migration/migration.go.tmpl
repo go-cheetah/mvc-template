@@ -3,6 +3,7 @@ package migration
 import (
 	"fmt"
 	"log"
+	"sort"
 
 	"gorm.io/gorm"
 )
@@ -32,12 +33,29 @@ func NewMigrationRegistry() *MigrationRegistry {
 
 // Register 注册一个迁移
 func (r *MigrationRegistry) Register(version, name string, up, down MigrationFunc) {
+	for _, item := range r.Migrations {
+		if item.Version == version {
+			panic(fmt.Sprintf("duplicate migration version: %s", version))
+		}
+	}
+
 	r.Migrations = append(r.Migrations, MigrationItem{
 		Version: version,
 		Name:    name,
 		Up:      up,
 		Down:    down,
 	})
+}
+
+func (r *MigrationRegistry) Sorted() []MigrationItem {
+	items := make([]MigrationItem, len(r.Migrations))
+	copy(items, r.Migrations)
+
+	sort.Slice(items, func(i, j int) bool {
+		return items[i].Version < items[j].Version
+	})
+
+	return items
 }
 
 // RunMigrations 运行所有未应用的迁移
@@ -61,7 +79,7 @@ func RunMigrations(db *gorm.DB, registry *MigrationRegistry) error {
 	}
 
 	// 运行未应用的迁移
-	for _, migration := range registry.Migrations {
+	for _, migration := range registry.Sorted() {
 		if !appliedMap[migration.Version] {
 			log.Printf("应用迁移: %s - %s", migration.Version, migration.Name)
 
@@ -76,13 +94,13 @@ func RunMigrations(db *gorm.DB, registry *MigrationRegistry) error {
 				return fmt.Errorf("迁移失败 %s: %w", migration.Version, err)
 			}
 
-			if err := tx.Commit().Error; err != nil {
-				return fmt.Errorf("提交事务失败: %w", err)
+			if err := recordMigrationTx(tx, migration.Version); err != nil {
+				tx.Rollback()
+				return fmt.Errorf("记录迁移失败 %s: %w", migration.Version, err)
 			}
 
-			// 事务外记录迁移，避免锁冲突
-			if err := client.RecordMigration(migration.Version); err != nil {
-				return fmt.Errorf("记录迁移失败 %s: %w", migration.Version, err)
+			if err := tx.Commit().Error; err != nil {
+				return fmt.Errorf("提交事务失败: %w", err)
 			}
 
 			log.Printf("迁移成功: %s", migration.Version)
@@ -112,7 +130,7 @@ func RollbackMigration(db *gorm.DB, registry *MigrationRegistry, version string)
 
 	// 查找迁移项
 	var migrationItem *MigrationItem
-	for _, m := range registry.Migrations {
+	for _, m := range registry.Sorted() {
 		if m.Version == version {
 			migrationItem = &m
 			break
